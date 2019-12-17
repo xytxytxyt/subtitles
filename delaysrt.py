@@ -1,5 +1,5 @@
 import datetime
-import StringIO
+import io
 
 
 class Subtitle(object):
@@ -19,26 +19,28 @@ class Subtitle(object):
         self.tot += datetime.timedelta(milliseconds=ms)
 
     def __str__(self):
-        sio = StringIO.StringIO()
-        print >> sio, self.count
+        sio = io.StringIO()
+        print(self.count, file=sio)
 
         fromt = datetime.datetime(1, 1, 1)
         tot = datetime.datetime(1, 1, 1)
         fromt += self.fromt
         tot += self.tot
-        print >> sio, '%d:%d:%d,%d --> %d:%d:%d,%d' % (
-            fromt.hour,
-            fromt.minute,
-            fromt.second,
-            fromt.microsecond/1000,
-            tot.hour,
-            tot.minute,
-            tot.second,
-            tot.microsecond/1000
-            )
+        print('%d:%d:%d,%d --> %d:%d:%d,%d' % (
+                fromt.hour,
+                fromt.minute,
+                fromt.second,
+                fromt.microsecond/1000,
+                tot.hour,
+                tot.minute,
+                tot.second,
+                tot.microsecond/1000
+            ),
+            file=sio
+        )
 
         for sub in self.subs:
-            print >> sio, sub
+            print(sub, file=sio)
 
         return sio.getvalue()
 
@@ -48,11 +50,11 @@ def subtitles(f):  # assume well-formatted
 
     try:
         while True:
-            count = int(f.next().strip())
+            count = int(next(f).strip())
 
             data = True
 
-            fromto = f.next().strip()
+            fromto = next(f).strip()
             froms, tos = [x.strip() for x in fromto.split('-->')]
             h, m, etc = froms.split(':')
             s, ms = etc.split(',')
@@ -75,7 +77,7 @@ def subtitles(f):  # assume well-formatted
 
             subs = []
             while True:
-                subline = f.next().strip()
+                subline = next(f).strip()
                 if subline:
                     subs.append(subline)
                 else:
@@ -95,7 +97,7 @@ def subtitles(f):  # assume well-formatted
 def delaysubtitles(f, ms):
     for subtitle in subtitles(f):
         subtitle.delay(ms)
-        print subtitle
+        print(subtitle)
 
 
 if __name__ == '__main__':
