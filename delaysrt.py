@@ -101,11 +101,11 @@ def delaysubtitles(f, ms):
 if __name__ == '__main__':
     import optparse
 
-    op = optparse.OptionParser()
+    op = optparse.OptionParser(description='Adjust timing of an .srt file')
     op.add_option('-f', '--file', dest='f', help='path to .srt file')
     op.add_option(
         '-t', '--ms', type='int', dest='ms',
-        help='delay in milliseconds'
+        help='delay in milliseconds (can be negative)'
     )
     options, args = op.parse_args()
 
