@@ -111,6 +111,6 @@ if __name__ == '__main__':
     )
     options, args = op.parse_args()
 
-    f = open(options.f)
+    f = open(options.f, encoding='utf-8-sig')
     delaysubtitles(f, options.ms)
     f.close()
